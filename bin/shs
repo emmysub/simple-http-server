@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+var server = require('../lib/index');
+server.listen(8000);
+console.log('server started');

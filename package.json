@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "mime": "1.2.x",
-    "async": "0.2.9"
+    "async": "0.2.x",
+    "colors": "0.6.x",
+    "optimist": "0.6.x"
   },
   "license": "MIT"
 }

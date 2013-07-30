@@ -25,16 +25,14 @@ server = http.createServer (request, response) ->
 
     if stats.isDirectory()
       fs.readdir path, (err, files) ->
-        if err
-          return console.log 'internal server error?' # FIXME
+        return console.log 'internal server error?' if err # FIXME
 
         types = {}
 
         async.eachLimit files, 10, (file, done) ->
           file = join path, file
           fs.stat file, (err, stats) ->
-            if err
-              return done(err)
+            return done(err) if err
 
             types[file] = stats.isDirectory()
             done()

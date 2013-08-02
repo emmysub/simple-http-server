@@ -10,10 +10,18 @@ server = http.createServer (request, response) ->
   dirname = './'
   path = join dirname, pathname
 
+  respond = (body) ->
+    response.write """<!doctype html>
+    <head>
+      <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0"/>
+      <meta charset="utf-8"/>
+    </head>
+    <body>#{body}</body>"""
+
   fs.stat path, (err, stats) ->
     if err
       response.writeHead 404
-      response.write '<h1>404 - Not Found</h1>'
+      respond '<h1>404 - Not Found</h1>'
       response.end()
       return
 
@@ -40,13 +48,14 @@ server = http.createServer (request, response) ->
 
           response.writeHead 200, 'content-type: text/html'
 
-          response.write "<h1>Directory #{path}</h1>"
+          body = "<h1>Directory #{path}</h1>"
           files.forEach (name) ->
             file = join path, name
 
             dir = if types[file] then '/' else ''
-            response.write "<li><a href=\"/#{file}\">#{name}#{dir}</a></li>"
+            body += "<li><a href=\"/#{file}\">#{name}#{dir}</a></li>"
 
+          respond body
           response.end()
 
 module.exports = server

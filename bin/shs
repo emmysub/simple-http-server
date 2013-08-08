@@ -15,17 +15,14 @@ if (argv.help) {
 
 var colorPort = ('' + argv.port).yellow;
 
-console.log('Starting server at port ' + colorPort);
-
 var server = require('../lib/index');
-server.listen(argv.port);
+server.listen(argv.port, function(){
+	console.log('Server started at port ' + colorPort);
+});
 server.on('error', function(e){
   if (e.errno === 'EADDRINUSE') {
-    console.log('address ' + colorPort + ' is already in use!');
+    console.log('Address ' + colorPort + ' is already in use!');
   } else {
-    console.log('unknow error, can\'t start server', e);
+    console.log('Unknow error, can\'t start server', e);
   }
-});
-server.on('listen', function(){
-  console.log('test');
 });

@@ -6,7 +6,7 @@ mime = require 'mime'
 async = require 'async'
 
 server = http.createServer (request, response) ->
-  pathname = url.parse(request.url).pathname
+  pathname = decodeURIComponent(url.parse(request.url).pathname)
   dirname = './'
   path = join dirname, pathname
 

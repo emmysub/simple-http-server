@@ -9,3 +9,8 @@ This is simple but functional http server with the following features:
 
 It was written as `python2 -m SimpleHTTPServer` replacement and to play with
 coffescript.
+
+# Installation
+You can use npm registry:
+
+`npm install -g shs`

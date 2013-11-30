@@ -1,7 +1,7 @@
 {
   "name": "shs",
   "author": "Tomasz Kołodziejski <tkolodziejsk@gmail.com>",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bin": {
     "shs": "./bin/shs"
   },

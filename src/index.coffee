@@ -5,6 +5,37 @@ http = require 'http'
 mime = require 'mime'
 async = require 'async'
 
+# Ranges request for audio/video seeks
+handleRanges = (path, type, stats, request, response) ->
+  range = request.headers.range
+  size = stats.size
+  positions = range.replace('bytes=', '').split('-');
+  start = parseInt(positions[0], 10) || 0
+  end = parseInt(positions[1], 10)
+  if isNaN end then end = size - 1
+  chunksize = end - start + 1
+
+  response.writeHead 206,
+    'Accept-Ranges': 'bytes'
+    'Content-Length': chunksize
+    'Content-Type': type
+    'Content-Range': 'bytes ' + start + '-' + end + '/' + size
+
+  fs.createReadStream(path,
+    start: start
+    end: end
+  ).pipe(response)
+
+handleFile = (path, stats, request, response) ->
+  type = mime.lookup path
+
+  if request.headers.range
+    handleRanges path, type, stats, request, response
+    return
+
+  response.writeHead 200, 'content-type': type
+  fs.createReadStream(path).pipe(response)
+
 server = http.createServer (request, response) ->
   pathname = decodeURIComponent(url.parse(request.url).pathname)
   dirname = './'
@@ -26,10 +57,7 @@ server = http.createServer (request, response) ->
       return
 
     if stats.isFile()
-      type = mime.lookup path
-
-      response.writeHead 200, 'content-type': type
-      fs.createReadStream(path).pipe(response)
+      handleFile path, stats, request, response
 
     if stats.isDirectory()
       fs.readdir path, (err, files) ->
